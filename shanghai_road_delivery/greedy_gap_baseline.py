@@ -5,7 +5,7 @@ import time
 import logging
 import numpy as np
 from datetime import datetime
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 import matplotlib.pyplot as plt
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class GreedyGAPBaseline:
     
-    def __init__(self, num_ground_vehicles=5, num_uavs=2):
+    def __init__(self, num_ground_vehicles=6, num_uavs=3):
         self.num_ground_vehicles = num_ground_vehicles  
         self.num_uavs = num_uavs
         self.total_vehicles = num_ground_vehicles + num_uavs
@@ -35,8 +35,11 @@ class GreedyGAPBaseline:
         logger.info(f"Initialized Greedy GAP algorithm: {num_ground_vehicles} carriers + {num_uavs} UAVs")
         
     def calculate_assignment_profit(self, vehicle, order, env) -> float:
+        #计算车辆-订单分配收益
+
         profit = 0.0
         
+        # 1. 距离收益
         try:
             distance = abs(vehicle.current_node - order.start_node)
             max_distance = 100.0  
@@ -44,7 +47,9 @@ class GreedyGAPBaseline:
             profit += self.distance_weight * distance_score
         except:
             profit += self.distance_weight * 0.5
-        
+
+
+        # 2. 能量收益
         if vehicle.vehicle_type == 'uav':
             if hasattr(vehicle, 'battery_level') and hasattr(vehicle, 'battery_capacity'):
                 battery_ratio = vehicle.battery_level / vehicle.battery_capacity
@@ -60,6 +65,7 @@ class GreedyGAPBaseline:
                 
         profit += self.capacity_weight * capacity_score
         
+        # 3. 成功概率收益
         success_score = 1.0
         if vehicle.vehicle_type == 'uav':
             if hasattr(order, 'weight') and order.weight > 5:
@@ -69,6 +75,8 @@ class GreedyGAPBaseline:
         return profit
     
     def greedy_assignment(self, available_orders, vehicles_status, env) -> Dict[int, int]:
+        #贪心分配算法主逻辑
+
         assignments = {}
         
         if not available_orders:
@@ -76,6 +84,7 @@ class GreedyGAPBaseline:
         
         profit_matrix = []
         
+        # 计算所有车辆-订单对的收益
         for vehicle in env.vehicles:
             vehicle_id = vehicle.vehicle_id
             vehicle_state = env.vehicle_states.get(vehicle_id)
@@ -91,11 +100,13 @@ class GreedyGAPBaseline:
                 profit = self.calculate_assignment_profit(vehicle, order, env)
                 profit_matrix.append((profit, vehicle_id, order.order_id))
         
+        # 按收益排序
         profit_matrix.sort(key=lambda x: x[0], reverse=True)
         
         assigned_vehicles = set()
         assigned_orders = set()
         
+        # 贪心分配
         for profit, vehicle_id, order_id in profit_matrix:
             if vehicle_id not in assigned_vehicles and order_id not in assigned_orders:
                 assignments[vehicle_id] = order_id
@@ -104,62 +115,34 @@ class GreedyGAPBaseline:
         
         return assignments
     
-    def select_actions(self, states, env) -> List[np.ndarray]:
-        actions = []
+    def select_actions(self, states, env) -> np.ndarray:
+        #为平台生成贪心动作（135维向量）
+        available_orders = list(env.active_orders.values())
+        vehicles = env.vehicles
         
-        available_orders = [order for order in env.active_orders.values() 
-                          if env.order_statuses.get(order.order_id) == OrderStatus.PENDING]
+        weight_matrix = np.zeros((9, 15))
         
-        assignments = self.greedy_assignment(available_orders, env.vehicle_states, env)
-        
-        for i, vehicle in enumerate(env.vehicles):
-            vehicle_id = vehicle.vehicle_id
-            movement_action = 0.0
-            pickup_action = 0.0
-            
-            if vehicle_id in assignments:
-                assigned_order_id = assignments[vehicle_id]
-                assigned_order = None
-                for order in available_orders:
-                    if order.order_id == assigned_order_id:
-                        assigned_order = order
-                        break
+        available_orders_copy = available_orders[:]
+        for i, vehicle in enumerate(vehicles):
+            if i >= 9 or len(available_orders_copy) == 0:
+                break
                 
-                if assigned_order:
-                    current_node = vehicle.current_node
-                    target_node = assigned_order.start_node
-                    
-                    if target_node > current_node:
-                        movement_action = 0.8
-                    elif target_node < current_node:
-                        movement_action = -0.8
-                    else:
-                        movement_action = 0.0
-                    
-                    pickup_action = 1.0
-            else:
-                if available_orders:
-                    nearest_order = min(available_orders, 
-                                      key=lambda o: abs(o.start_node - vehicle.current_node))
-                    target_node = nearest_order.start_node
-                    
-                    if target_node > vehicle.current_node:
-                        movement_action = 0.3
-                    elif target_node < vehicle.current_node:
-                        movement_action = -0.3
-                    else:
-                        movement_action = 0.0
-                else:
-                    movement_action = np.random.uniform(-0.2, 0.2)
-                
-                pickup_action = 0.0
+            best_order_idx = None
+            best_distance = float('inf')
             
-            movement_action += np.random.normal(0, 0.05)
-            movement_action = np.clip(movement_action, -1.0, 1.0)
+            for j, order in enumerate(available_orders_copy):
+                if j >= 15:
+                    break
+                distance = abs(vehicle.current_node - order.start_node)
+                if distance < best_distance:
+                    best_distance = distance
+                    best_order_idx = j
             
-            actions.append(np.array([movement_action, pickup_action], dtype=np.float32))
+            if best_order_idx is not None:
+                weight_matrix[i, best_order_idx] = 1.0
+                available_orders_copy.pop(best_order_idx)
         
-        return actions
+        return weight_matrix.flatten()
 
 
 class GreedyBaselineTester:
@@ -186,36 +169,45 @@ class GreedyBaselineTester:
         os.makedirs(self.results_dir, exist_ok=True)
     
     def _init_environment(self):
+        #初始化环境（与RL训练相同）
         logger.info("Initializing road network environment (greedy mode)...")
         
         env_config = {
             'num_ground_vehicles': self.config['num_ground_vehicles'],
             'num_uavs': self.config['num_uavs'],
             'max_time_steps': self.config['max_time_steps'],
+            'max_concurrent_orders': self.config.get('max_concurrent_orders', 15),
         }
         
         self.env = PureRealRoadNetworkEnvironmentWithConstraints(**env_config)
         
-        states = self.env.reset()
-        self.state_dim = len(states[0])
+        test_days = [28, 29, 30]
+        day = test_days[0]
+        if day is not None:
+            self.env.load_road_orders(day)
+        states = self.env.reset(day=day)
+        self.state_dim = len(states) if not isinstance(states, list) else len(states[0])
         self.action_dim = 2
-        self.num_agents = len(states)
+        self.num_agents = 1
         
         logger.info(f"Environment initialized:")
         logger.info(f"  State dimension: {self.state_dim}")
         logger.info(f"  Number of agents: {self.num_agents}")
     
-    def run_episode(self, episode: int) -> Dict[str, Any]:
-        states = self.env.reset()
+    def run_episode(self, episode: int, day: Optional[int] = None) -> Dict[str, Any]:
+        
+        if day is not None:
+            self.env.load_road_orders(day)
+        states = self.env.reset(day=day)
         episode_reward = 0.0
         self.env.episode_count = episode
-        
+
+        # 记录每个时间步的状态
         for step in range(self.config['max_time_steps']):
             actions = self.greedy_agent.select_actions(states, self.env)
             
-            next_states, rewards, done, info = self.env.step(actions)
-            episode_reward += sum(rewards)
-            states = next_states
+            next_states, reward, done, info = self.env.step(actions)
+            episode_reward += float(reward)
             
             if done:
                 break
@@ -244,7 +236,9 @@ class GreedyBaselineTester:
         for episode in range(num_episodes):
             episode_start = time.time()
             
-            stats = self.run_episode(episode)
+            test_days = [28, 29, 30]
+            day = test_days[episode % len(test_days)]
+            stats = self.run_episode(episode, day=day)
             
             self.episode_rewards.append(stats['episode_reward'])
             self.episode_pickups.append(stats['episode_pickups'])
@@ -305,9 +299,10 @@ class GreedyBaselineTester:
 
 def main():
     config = {
-        'num_ground_vehicles': 5,
-        'num_uavs': 2,
-        'max_time_steps': 50,
+        'num_ground_vehicles': 6,
+        'num_uavs': 3,
+        'max_time_steps': 120,
+        'max_concurrent_orders': 15,
         'num_episodes': 1,
         'debug_mode': True,
     }

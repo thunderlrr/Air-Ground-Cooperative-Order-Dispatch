@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 import networkx as nx
 import sys
@@ -7,6 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared_components
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'shared_components', 'simulator'))
 
 from simulator.objects import UAV, Carrier, Order, Vehicle
+from distance_utils import distance_calculator
 
 from enum import Enum
 
@@ -62,24 +65,8 @@ class RoadNetworkUAV(UAV):
         print(f"Energy parameters: base_power={self.base_power}kW, load_factor={self.load_power_factor}kW/kg, safety_margin={self.safety_margin*100}%")
 
     def calculate_flight_time_to_node(self, target_node):
-        if hasattr(self, 'node_coordinates') and target_node in self.node_coordinates:
-            current_coord = self.node_coordinates.get(self.current_node)
-            target_coord = self.node_coordinates.get(target_node)
-            if current_coord and target_coord:
-                from math import radians, cos, sin, asin, sqrt
-                lon1, lat1 = current_coord
-                lon2, lat2 = target_coord
-                lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-                dlon = lon2 - lon1
-                dlat = lat2 - lat1
-                a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-                c = 2 * asin(sqrt(a))
-                dist_km = c * 6371
-                return dist_km / self.speed
-        
-        node_dist = abs(self.current_node - target_node)
-        estimated_km = node_dist * 0.0001
-        return estimated_km / self.speed
+        dist_km = distance_calculator.get_straight_line_distance(self.current_node, target_node)
+        return dist_km / self.speed
 
     def calculate_enhanced_energy_consumption(self, flight_time_hours, payload_kg=0.0):
         base_energy = flight_time_hours * self.base_power
@@ -98,13 +85,11 @@ class RoadNetworkUAV(UAV):
         pickup_time = self.calculate_flight_time_to_node(order.start_node)
         pickup_energy = self.calculate_enhanced_energy_consumption(pickup_time, 0.0)
         
-        pickup_to_delivery_dist = abs(order.start_node - order.end_node) * 0.0003 / 1000
-        delivery_time = pickup_to_delivery_dist / self.speed
+        delivery_time = distance_calculator.get_straight_line_distance(order.start_node, order.end_node) / self.speed
         payload = getattr(order, 'weight', self.standard_payload)
         delivery_energy = self.calculate_enhanced_energy_consumption(delivery_time, payload)
         
-        delivery_to_charging_dist = abs(order.end_node - self.charging_station_node) * 0.0003 / 1000
-        return_time = delivery_to_charging_dist / self.speed
+        return_time = distance_calculator.get_straight_line_distance(order.end_node, self.charging_station_node) / self.speed
         return_energy = self.calculate_enhanced_energy_consumption(return_time, 0.0)
         
         total_energy_required = pickup_energy + delivery_energy + return_energy
@@ -158,7 +143,7 @@ class RoadNetworkUAV(UAV):
         nearest_station = self.charging_stations_list[0]
         
         for station in self.charging_stations_list:
-            distance = abs(station - current_pos)
+            distance = distance_calculator.get_straight_line_distance(current_pos, station)
             if distance < min_distance:
                 min_distance = distance
                 nearest_station = station
@@ -246,7 +231,7 @@ class RoadNetworkUAV(UAV):
 class RoadNetworkCarrier:
     
     def __init__(self, carrier_id, start_node, road_graph, capacity=float('inf'), 
-                 speed=30, range_limit=50, max_work_hours=8):
+                 speed=45, range_limit=50, max_work_hours=8):
         self.vehicle_id = carrier_id
         self.vehicle_type = 'carrier'
         self.start_node = start_node
@@ -265,28 +250,17 @@ class RoadNetworkCarrier:
         self.current_grid = start_node
         
         print(f"Carrier {carrier_id} initialized: node={start_node}, work_time_limit={max_work_hours}h")
-    
+        
     def calculate_road_travel_time(self, from_node, to_node):
         if from_node == to_node:
             return 0.0
-        
         try:
-            if self.road_graph is not None:
-                distance = nx.shortest_path_length(self.road_graph, from_node, to_node)
-                distance_km = distance * 0.1
-                travel_time = distance_km / self.speed
-                return travel_time
-            else:
-                node_dist = abs(from_node - to_node)
-                estimated_km = node_dist * 0.00001
-                return estimated_km / self.speed
-                
-        except nx.NetworkXNoPath:
-            print(f"Carrier{self.vehicle_id}: No path from{from_node}to{to_node}")
-            return float('inf')
+            distance_km = distance_calculator.get_road_network_distance(from_node, to_node)
+            travel_time = distance_km / self.speed
+            return travel_time
         except Exception as e:
-            print(f"Carrier{self.vehicle_id}: Path calculation error {e}")
-            return abs(from_node - to_node) * 0.0001
+            print(f"Carrier{self.vehicle_id}: path calculation error {e}")
+            return float("inf")
     
     def can_deliver_order_within_work_hours(self, road_order):
         try:
@@ -380,3 +354,8 @@ def test_enhanced_uav_energy():
 
 if __name__ == "__main__":
     test_enhanced_uav_energy()
+
+    
+
+
+
