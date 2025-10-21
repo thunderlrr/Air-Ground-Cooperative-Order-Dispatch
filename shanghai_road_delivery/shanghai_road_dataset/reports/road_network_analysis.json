@@ -1,0 +1,116 @@
+{
+  "analysis_date": "2025-09-08",
+  "dataset": "Shanghai Road Network",
+  "nodes_analysis": {
+    "total_nodes": 590249,
+    "coordinate_bounds": {
+      "lng_min": 120.8583175,
+      "lng_max": 122.0905931,
+      "lat_min": 30.6592375,
+      "lat_max": 31.52747
+    },
+    "fields": [
+      "FID"
+    ],
+    "sample_data": [
+      {
+        "node_id": 0,
+        "longitude": 121.5571506,
+        "latitude": 31.2609856
+      },
+      {
+        "node_id": 1,
+        "longitude": 121.5572094,
+        "latitude": 31.2608953
+      },
+      {
+        "node_id": 2,
+        "longitude": 121.5589778,
+        "latitude": 31.2585346
+      },
+      {
+        "node_id": 3,
+        "longitude": 121.5835263,
+        "latitude": 31.235022
+      },
+      {
+        "node_id": 4,
+        "longitude": 121.5834866,
+        "latitude": 31.2351966
+      }
+    ]
+  },
+  "edges_analysis": {
+    "total_edges": 649577,
+    "fields": [
+      "eid",
+      "raw_eid",
+      "highway"
+    ],
+    "length_stats": {
+      "min": null,
+      "max": null,
+      "mean": null,
+      "median": null
+    },
+    "sample_data": [
+      {
+        "eid": 2,
+        "raw_eid": 8621489,
+        "highway": "tertiary"
+      },
+      {
+        "eid": 1018894,
+        "raw_eid": 1330708614,
+        "highway": "primary"
+      },
+      {
+        "eid": 3,
+        "raw_eid": 8621489,
+        "highway": "tertiary"
+      },
+      {
+        "eid": 26729,
+        "raw_eid": 47046709,
+        "highway": "residential"
+      },
+      {
+        "eid": 970107,
+        "raw_eid": 1290439824,
+        "highway": "tertiary"
+      }
+    ]
+  },
+  "spatial_overlap": {
+    "valid_overlap": "True",
+    "grid_bounds": {
+      "lng_min": 120.873575,
+      "lng_max": 121.959825,
+      "lat_min": 30.705011,
+      "lat_max": 31.496689
+    },
+    "node_bounds": {
+      "lng_min": 120.8583175,
+      "lng_max": 122.0905931,
+      "lat_min": 30.6592375,
+      "lat_max": 31.52747
+    },
+    "overlap_bounds": {
+      "lng": [
+        120.873575,
+        121.959825
+      ],
+      "lat": [
+        30.705011,
+        31.496689
+      ]
+    },
+    "coverage_ratio": 1.0
+  },
+  "summary": {
+    "total_nodes": 590249,
+    "total_edges": 649577,
+    "spatial_overlap_valid": "True",
+    "coverage_ratio": 1.0
+  }
+}

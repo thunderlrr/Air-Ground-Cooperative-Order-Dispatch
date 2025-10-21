@@ -1,0 +1,27 @@
+{
+  "build_date": "2025-09-08",
+  "graph_properties": {
+    "num_nodes": 590249,
+    "num_edges": 0,
+    "is_connected": false,
+    "num_components": 590249,
+    "avg_degree": 0.0,
+    "min_degree": 0,
+    "max_degree": 0
+  },
+  "feature_info": {
+    "feature_dim": 9,
+    "num_nodes": 590249,
+    "feature_description": [
+      "longitude",
+      "latitude",
+      "degree",
+      "neighbor_lng_mean",
+      "neighbor_lat_mean",
+      "neighbor_lng_std",
+      "neighbor_lat_std",
+      "edge_length_mean",
+      "edge_length_std"
+    ]
+  }
+}

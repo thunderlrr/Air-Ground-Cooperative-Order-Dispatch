@@ -1,0 +1,313 @@
+{
+  "conversion_date": "2025-09-08",
+  "total_days_processed": 30,
+  "total_days_target": 30,
+  "overall_stats": {
+    "total_original_orders": 20664,
+    "total_converted_orders": 20664,
+    "total_failed_orders": 0,
+    "overall_conversion_rate": 1.0
+  },
+  "daily_stats": [
+    {
+      "day": 1,
+      "original_count": 699,
+      "converted_count": 699,
+      "conversion_rate": 1.0,
+      "original_time_steps": 121,
+      "converted_time_steps": 121,
+      "original_order_ids": 699,
+      "converted_order_ids": 699
+    },
+    {
+      "day": 2,
+      "original_count": 698,
+      "converted_count": 698,
+      "conversion_rate": 1.0,
+      "original_time_steps": 117,
+      "converted_time_steps": 117,
+      "original_order_ids": 698,
+      "converted_order_ids": 698
+    },
+    {
+      "day": 3,
+      "original_count": 690,
+      "converted_count": 690,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 690,
+      "converted_order_ids": 690
+    },
+    {
+      "day": 4,
+      "original_count": 708,
+      "converted_count": 708,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 708,
+      "converted_order_ids": 708
+    },
+    {
+      "day": 5,
+      "original_count": 694,
+      "converted_count": 694,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 694,
+      "converted_order_ids": 694
+    },
+    {
+      "day": 6,
+      "original_count": 692,
+      "converted_count": 692,
+      "conversion_rate": 1.0,
+      "original_time_steps": 117,
+      "converted_time_steps": 117,
+      "original_order_ids": 692,
+      "converted_order_ids": 692
+    },
+    {
+      "day": 7,
+      "original_count": 694,
+      "converted_count": 694,
+      "conversion_rate": 1.0,
+      "original_time_steps": 121,
+      "converted_time_steps": 121,
+      "original_order_ids": 694,
+      "converted_order_ids": 694
+    },
+    {
+      "day": 8,
+      "original_count": 703,
+      "converted_count": 703,
+      "conversion_rate": 1.0,
+      "original_time_steps": 121,
+      "converted_time_steps": 121,
+      "original_order_ids": 703,
+      "converted_order_ids": 703
+    },
+    {
+      "day": 9,
+      "original_count": 689,
+      "converted_count": 689,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 689,
+      "converted_order_ids": 689
+    },
+    {
+      "day": 10,
+      "original_count": 698,
+      "converted_count": 698,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 698,
+      "converted_order_ids": 698
+    },
+    {
+      "day": 11,
+      "original_count": 717,
+      "converted_count": 717,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 717,
+      "converted_order_ids": 717
+    },
+    {
+      "day": 12,
+      "original_count": 680,
+      "converted_count": 680,
+      "conversion_rate": 1.0,
+      "original_time_steps": 119,
+      "converted_time_steps": 119,
+      "original_order_ids": 680,
+      "converted_order_ids": 680
+    },
+    {
+      "day": 13,
+      "original_count": 690,
+      "converted_count": 690,
+      "conversion_rate": 1.0,
+      "original_time_steps": 119,
+      "converted_time_steps": 119,
+      "original_order_ids": 690,
+      "converted_order_ids": 690
+    },
+    {
+      "day": 14,
+      "original_count": 698,
+      "converted_count": 698,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 698,
+      "converted_order_ids": 698
+    },
+    {
+      "day": 15,
+      "original_count": 680,
+      "converted_count": 680,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 680,
+      "converted_order_ids": 680
+    },
+    {
+      "day": 16,
+      "original_count": 702,
+      "converted_count": 702,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 702,
+      "converted_order_ids": 702
+    },
+    {
+      "day": 17,
+      "original_count": 676,
+      "converted_count": 676,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 676,
+      "converted_order_ids": 676
+    },
+    {
+      "day": 18,
+      "original_count": 655,
+      "converted_count": 655,
+      "conversion_rate": 1.0,
+      "original_time_steps": 113,
+      "converted_time_steps": 113,
+      "original_order_ids": 655,
+      "converted_order_ids": 655
+    },
+    {
+      "day": 19,
+      "original_count": 651,
+      "converted_count": 651,
+      "conversion_rate": 1.0,
+      "original_time_steps": 115,
+      "converted_time_steps": 115,
+      "original_order_ids": 651,
+      "converted_order_ids": 651
+    },
+    {
+      "day": 20,
+      "original_count": 679,
+      "converted_count": 679,
+      "conversion_rate": 1.0,
+      "original_time_steps": 114,
+      "converted_time_steps": 114,
+      "original_order_ids": 679,
+      "converted_order_ids": 679
+    },
+    {
+      "day": 21,
+      "original_count": 707,
+      "converted_count": 707,
+      "conversion_rate": 1.0,
+      "original_time_steps": 121,
+      "converted_time_steps": 121,
+      "original_order_ids": 707,
+      "converted_order_ids": 707
+    },
+    {
+      "day": 22,
+      "original_count": 674,
+      "converted_count": 674,
+      "conversion_rate": 1.0,
+      "original_time_steps": 115,
+      "converted_time_steps": 115,
+      "original_order_ids": 674,
+      "converted_order_ids": 674
+    },
+    {
+      "day": 23,
+      "original_count": 701,
+      "converted_count": 701,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 701,
+      "converted_order_ids": 701
+    },
+    {
+      "day": 24,
+      "original_count": 673,
+      "converted_count": 673,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 673,
+      "converted_order_ids": 673
+    },
+    {
+      "day": 25,
+      "original_count": 698,
+      "converted_count": 698,
+      "conversion_rate": 1.0,
+      "original_time_steps": 117,
+      "converted_time_steps": 117,
+      "original_order_ids": 698,
+      "converted_order_ids": 698
+    },
+    {
+      "day": 26,
+      "original_count": 680,
+      "converted_count": 680,
+      "conversion_rate": 1.0,
+      "original_time_steps": 120,
+      "converted_time_steps": 120,
+      "original_order_ids": 680,
+      "converted_order_ids": 680
+    },
+    {
+      "day": 27,
+      "original_count": 683,
+      "converted_count": 683,
+      "conversion_rate": 1.0,
+      "original_time_steps": 115,
+      "converted_time_steps": 115,
+      "original_order_ids": 683,
+      "converted_order_ids": 683
+    },
+    {
+      "day": 28,
+      "original_count": 690,
+      "converted_count": 690,
+      "conversion_rate": 1.0,
+      "original_time_steps": 118,
+      "converted_time_steps": 118,
+      "original_order_ids": 690,
+      "converted_order_ids": 690
+    },
+    {
+      "day": 29,
+      "original_count": 674,
+      "converted_count": 674,
+      "conversion_rate": 1.0,
+      "original_time_steps": 116,
+      "converted_time_steps": 116,
+      "original_order_ids": 674,
+      "converted_order_ids": 674
+    },
+    {
+      "day": 30,
+      "original_count": 691,
+      "converted_count": 691,
+      "conversion_rate": 1.0,
+      "original_time_steps": 117,
+      "converted_time_steps": 117,
+      "original_order_ids": 691,
+      "converted_order_ids": 691
+    }
+  ]
+}
